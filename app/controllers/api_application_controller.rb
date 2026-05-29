@@ -32,7 +32,6 @@ class ApiApplicationController < ActionController::API
         render json: ApiApplicationHelper::Response.error(message: "Authentication error"),
                status: :internal_server_error
       end
-      end
     end
   end
 end
