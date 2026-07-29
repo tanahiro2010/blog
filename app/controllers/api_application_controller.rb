@@ -4,9 +4,15 @@ SKIP_PATHS = %w[/api/login /api/register /api/invites]
 
 class ApiApplicationController < ActionController::API
   include ActionController::MimeResponds
+  before_action :init_helper
   before_action :auth_middleware
 
+
   private
+  def init_helper
+    @header_helper = ApiApplicationHelper::Header.new(request.headers)
+    @is_json = @header_helper.is_json?
+  end
   def auth_middleware
     path = request.path
     unless SKIP_PATHS.include?(path)

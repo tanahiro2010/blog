@@ -3,10 +3,12 @@ class ApplicationController < ActionController::Base
   before_action :authenticate_user!
   helper_method :current_user
 
+
+
   private
 
   def authenticate_user!
-    redirect_to "/login" unless current_user
+    redirect_to "/login" unless @current_user
   end
 
   def current_user
@@ -19,5 +21,15 @@ class ApplicationController < ActionController::Base
     return @current_user = nil unless session.present?
 
     @current_user = Auth.find_by(username: session.user)
+  end
+
+  class AdminController < ApplicationController
+    before_action :authenticate_admin!
+
+    private
+
+    def authenticate_admin!
+      redirect_to "/" unless @current_user&.admin?
+    end
   end
 end

@@ -98,4 +98,14 @@ module ApiApplicationHelper
       }
     end
   end
+
+  class Header
+    def initialize(headers)
+      @headers = headers
+    end
+
+    def is_json?
+      @headers["Content-Type"]&.include?("application/json")
+    end
+  end
 end
