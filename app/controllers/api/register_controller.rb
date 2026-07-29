@@ -1,7 +1,8 @@
 class Api::RegisterController < ApiApplicationController
   def create
+    token = params[:token]
     email = params[:email]
-    if Invite.exists?(email: email)
+    if Invite.exists?(token: token)
       res = ApiApplicationHelper::Response.success(message: "Invite found for email")
       render json: res, status: :unprocessable_entity
       return
