@@ -17,9 +17,23 @@ class Api::InvitesController < ApiApplicationController
 
     begin
       invite = Invite.create_invite(email)
-      render json: ApiApplicationHelper::Response.ok(message: "Invite created", data: {
-        invite: invite
-      })
+
+      result = InviteMailer.with(invite).invite_email
+      if result.is_a?(Net::HTTPOK)
+        if @is_json
+          res = ApiApplicationHelper::Response.success(message: "Invite email sent successfully")
+          render json: res
+        else
+          redirect_to "/invite?result=created&message=#{CGI.escape("Invite email sent successfully")}"
+        end
+      else
+        if @is_json
+          res = ApiApplicationHelper::Response.error(message: "Failed to send invite email")
+          render json: res, status: :internal_server_error
+        else
+          redirect_to "/invite?result=failed&message=#{CGI.escape("Failed to send invite email")}"
+        end
+      end
     rescue Error => e
       render json: ApiApplicationHelper::Response.error(message: "Failed to create invite", data: {
         error: e.message

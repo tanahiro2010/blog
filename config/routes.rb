@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   root "public/home#index"
   get "login" => "public/login#index", as: :login
+  get "invite" => "public/invite#index", as: :invite
 
   # PWA
   get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
